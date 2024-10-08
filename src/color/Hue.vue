@@ -38,7 +38,7 @@ export default defineComponent({
       const canvas: any = this.$refs.canvasHue
       const width = this.width
       const height = this.height
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
       canvas.width = width
       canvas.height = height
 
@@ -60,7 +60,7 @@ export default defineComponent({
     },
     selectHue(e: any) {
       const { top: hueTop } = this.$el.getBoundingClientRect()
-      const ctx = e.target.getContext('2d')
+      const ctx = e.target.getContext('2d', { willReadFrequently: true })
 
       const mousemove = (e: any) => {
         let y = e.clientY - hueTop
@@ -75,10 +75,9 @@ export default defineComponent({
         this.slideHueStyle = {
           top: y - 2 + 'px',
         }
-        // If you use the maximum value, the selected pixel will be empty, and the empty default is black
-        const imgData = ctx.getImageData(0, Math.min(y, this.height - 1), 1, 1)
-        const [r, g, b] = imgData.data
-        this.$emit('selectHue', { r, g, b })
+        // Calculate hue based on the y position
+        const hue = 360 - (y / this.height) * 360
+        this.$emit('selectHue', hue)
       }
 
       mousemove(e)

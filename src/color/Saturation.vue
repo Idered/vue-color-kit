@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { createLinearGradient } from './composible'
+import { createLinearGradient, hsv2hslString } from './composible'
 
 export default defineComponent({
   props: {
@@ -44,11 +44,11 @@ export default defineComponent({
     renderColor() {
       const canvas: any = this.$refs.canvasSaturation
       const size = this.size
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
       canvas.width = size
       canvas.height = size
 
-      ctx.fillStyle = this.color
+      ctx.fillStyle = `hsl(${this.hsv.h}deg 100% 50%)`
       ctx.fillRect(0, 0, size, size)
 
       createLinearGradient(
@@ -68,11 +68,9 @@ export default defineComponent({
       }
     },
     selectSaturation(e: any) {
-      const {
-        top: saturationTop,
-        left: saturationLeft,
-      } = this.$el.getBoundingClientRect()
-      const ctx = e.target.getContext('2d')
+      const { top: saturationTop, left: saturationLeft } =
+        this.$el.getBoundingClientRect()
+      const ctx = e.target.getContext('2d', { willReadFrequently: true })
 
       const mousemove = (e: any) => {
         let x = e.clientX - saturationLeft

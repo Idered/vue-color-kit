@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { setColorValue, rgb2hex } from './composible'
+import { setColorValue, rgb2hex, hsv2rgb } from './composible'
 
 import Saturation from './Saturation.vue'
 import Hue from './Hue.vue'
@@ -215,8 +215,11 @@ export default defineComponent({
     handleBlur(event: FocusEvent) {
       this.$emit('inputBlur', event)
     },
-    selectHue(color: any) {
-      const { r, g, b, h, s, v } = setColorValue(color)
+    selectHue(h: number) {
+      const s = this.hsv.s
+      const v = this.hsv.v
+      const rgb = hsv2rgb({ h, s, v })
+      const { r, g, b } = setColorValue(rgb)
       Object.assign(this, { r, g, b, h, s, v })
       this.setText()
       this.$nextTick(() => {

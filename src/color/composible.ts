@@ -15,7 +15,7 @@ export function setColorValue(color: string) {
 }
 export function createAlphaSquare(size: number) {
   const canvas = document.createElement('canvas')
-  const ctx: any = canvas.getContext('2d')
+  const ctx: any = canvas.getContext('2d', { willReadFrequently: true })
   const doubleSize = size * 2
   canvas.width = doubleSize
   canvas.height = doubleSize
@@ -102,3 +102,26 @@ export function rgb2hsv({ r, g, b }: any) {
   let v = parseFloat(max.toFixed(2))
   return { h, s, v }
 }
+
+export function hsv2rgb({h,s,v}:{h:number,s:number,v:number}) 
+{                              
+  let f= (n,k=(n+h/60)%6) => v - v*s*Math.max( Math.min(k,4-k,1), 0);     
+  return {
+    r: f(5) * 255,
+    g: f(3) * 255,
+    b: f(1) * 255,
+  };       
+}   
+
+export function hsv2hsl({h,s,v}:{h:number,s:number,v:number}) {
+  s = s / 100
+  v = v / 100
+  let l = (2 - s) * v / 2
+  return { h, s, v, l }
+}
+
+export function hsv2hslString(data:{h:number,s:number,v:number}) {
+  const { h, s, v } = hsv2hsl(data)
+  return `hsl(${h}, ${s}%, ${v}%)`
+}
+

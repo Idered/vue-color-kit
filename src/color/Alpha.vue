@@ -55,7 +55,7 @@ export default defineComponent({
       const size = this.alphaSize
       const canvasSquare = createAlphaSquare(size)
 
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
       canvas.width = width
       canvas.height = height
 
